@@ -68,16 +68,36 @@ def addbinary(s, t):
 
 def compress(s):
     """first = color, remaining 7 = quantity"""
-    if s == '':
-        return s
-    if len(s) == 64:
-        print(s[0]+bin(64)[2:])
-
+    output = ''
+    count = 1
+    for i in range(1, len(s)):
+        if s[i] == s[i - 1]:
+            count += 1
+        else:
+            output += s[i-1] + str(bin(count))[2:].zfill(7)
+            count = 1
+    output += s[-1] + str(bin(count))[2:].zfill(7)
+    return output
 
 
 def uncompress(s):
     """Insert docstring here."""
-    pass  # insert your code here
+    output = ''
+    curr = ''
+    val = ''
+    for i in range( len( s ) ):
+        if i == 0:
+            curr = s[i]
+        elif i % 8 == 0:
+            val = basetonum( val, 2 )
+            output += curr * val
+            val = ''
+            curr = s[i]
+        else:
+            val += s[i]
+    val = basetonum(val, 2)
+    output += curr * val
+    return output
 
 
 def assign_bool(s):
@@ -200,20 +220,21 @@ def main():
             """If the user enters option E, the program will ask the user to 
             enter a binary string. The program will compress the image and 
             display the run-length encoding string of the image. """
-
+            s = input("\n\tEnter a binary string of an image: ")
+            print("\n\t Original image: {}".format(s))
+            print("\n\t Run-length encoded image: {}".format(compress(s)))
 
         elif option == 'u':
             """If the user enters option U, the program will ask the user to 
             enter a binary string representing a run-length encoding string 
             of an image. The program will uncompress the image and display 
             the original representation of the image. """
-
+            s = input("\n\tEnter a run-length encoded string of an image: ")
+            print( "\n\t Run-length encoded image: {}".format(s))
+            print("\n\t Original image: {}".format(uncompress(s)))
         elif option == 'x':
             cont = False
-
+    print('May the force be with you.')
 
 if __name__ == "__main__":
     main()
-
-
-    # check for this update
