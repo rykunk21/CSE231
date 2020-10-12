@@ -1,4 +1,49 @@
-""" Insert heading comments here."""
+##########################################################
+# Computer Project 04
+#
+# Algorithm
+#   Base the code around the menu of options that the user can choose
+#   Open an infinite loop to continue iteration until the user wants to stop
+#   Maintain all the heavy computation to the functions then use the "main"
+#   function to call the data from the user
+#   Input should be prompted and then passed through the corresponding
+#   function
+#   Quit when the user wants to quit
+###########################################################
+
+"""If the user enters option A, the program will ask the user to enter a
+numeric value N and a base number B in the range between 2 and 10 inclusive.
+If N is a non-negative number and B is valid (an integer between 2 and 10),
+the program will calculate and display the string representation of the
+number in base B. Otherwise, the program will display an appropriate message
+and re-prompt to enter the invalid input. Note that the string method
+.isdigit() is useful here.
+
+If the user enters option B, the program will ask the user to enter a
+string S and a base number B in the range between 2 and 10 inclusive. If B
+is valid, it will calculate and display the decimal representation of the
+string. Otherwise, the program will display an appropriate message and
+re-prompt to enter the invalid input
+
+If the user enters option C, the program will ask the user to enter three
+inputs: a base B1, a base B2 (both of which are between 2 and 10, inclusive)
+and s_1, which is a string representing a number in base B1. If B1 and B2
+are valid, it will calculate and display a string representing s_1 in base
+B2. Otherwise, the program will display an appropriate message and re-prompt
+to enter the invalid input.
+
+If the user enters option D, the program should ask the user to enter two
+binary strings. The program will calculate and display the sum of the two
+binary numbers.
+
+If the user enters option E, the program will ask the user to enter a
+binary string. The program will compress the image and display the
+run-length encoding string of the image.
+
+If the user enters option U, the program will ask the user to enter a
+binary string representing a run-length encoding string of an image. The
+program will uncompress the image and display the original representation of
+the image. """
 
 
 def display_options():
@@ -25,7 +70,6 @@ def numtobase(n, b):
     is 0. (This avoids leading zeros!) """
     output = ''
     cont = True
-    print()
     if n == 0:
         return ''
     while cont:
@@ -34,7 +78,9 @@ def numtobase(n, b):
             cont = False
         else:
             n = n // b
-    return output[::-1]
+    return output[::-1]   # instead of adding the string up in forward
+    # notation, build the string backwards and return the string with a
+    # negative 1 step to flip it to the correct orientation
 
 
 def basetonum(s, b):
@@ -42,46 +88,64 @@ def basetonum(s, b):
     represents a number in base B where B is between 2 and 10 inclusive. It
     should then return an integer in base 10 representing the same number as S.
     It should output 0 when S is the empty string. This function is the inverse
-    of the previous function numtobase()."""
-    s = s[::-1]
+    of the previous function num_to_base()."""
+    s = s[::-1]  # iterate backwards over the string again to work in reverse
     output = 0
-    for i, ch in enumerate(s):
+    for i, ch in enumerate(s):  # the builtin enumerate function is useful here
         ch = int(ch)
-        output += (ch * (b**i))
+        output += (ch * (b ** i))
     return output
 
 
 def basetobase(B1, B2, s_in_B1):
-    """Insert docstring here."""
+    """ This function is designed to take a string in base 1 and return that
+    same string in base 2. Both base 1 and base 2 can be determined by the
+    user. """
 
-    actual_s1 = basetonum(s_in_B1, B1)
+    actual_s1 = basetonum(s_in_B1, B1)  # instead of completing a new
+    # function, use this function to call a previous function and then alter
+    # the data a little bit
     return numtobase(actual_s1, B2)
 
 
 def addbinary(s, t):
-    """Insert docstring here."""
+    """ This function adds binary numbers together and returns a string of
+    the added binary strings"""
+
     s = int(basetobase(2, 10, s))
     t = int(basetobase(2, 10, t))
 
-    return str(bin(s+t))[2:]
+    return str(bin(s + t))[2:]  # using the bin() function, we can convert
+    # any number into binary and then remove the first two characters (0b)
+    # to convert any number to binary. in this case its s + t
 
 
 def compress(s):
-    """first = color, remaining 7 = quantity"""
+    """ This function returns a string of the most concise 1 byte value form
+    of the string in the format: first = color, remaining 7 = quantity; use
+    the .zfill() method with the bin() function reduce the amount of code
+    ( this function makes a byte sized string (; )"""
+    if len(s) < 1:  # check if the string is empty and return empty string if
+        # True
+        return ''
     output = ''
     count = 1
     for i in range(1, len(s)):
         if s[i] == s[i - 1]:
             count += 1
         else:
-            output += s[i-1] + str(bin(count))[2:].zfill(7)
+            output += s[i - 1] + str(bin(count))[2:].zfill(7)
             count = 1
     output += s[-1] + str(bin(count))[2:].zfill(7)
     return output
 
 
 def uncompress(s):
-    """Insert docstring here."""
+    """ This function returns the original string via decoding the run
+    length encoded version of the image. We need to note that the the
+    encoded string is represented as s[0] == color and s[1:8] == binary
+    representation of the count of the color. Using this information we can
+    simply reverse the effect of run length encoding of the image """
     output = ''
     curr = ''
     val = ''
@@ -117,18 +181,18 @@ def assign_bool(s):
     return s
 
 
-def valid_base():
+def valid_base(prompt):
     while True:
-        b = input("\n\tEnter Base: ")
+        b = input(prompt)
         if not b.isdigit():
-            print("\n\tError: {} was not a valid "
-                  "non-negative integer.".format(b))
+            print("\n\tError: {} was not a valid integer between 2 and 10 "
+                  "inclusive.".format(b))
             continue
         else:
             b = int(b)
         if not 2 <= b <= 10:
-            print("\n\tError: {} was not a valid "
-                  "non-negative integer.".format(b))
+            print("\n\tError: {} was not a valid integer between 2 and 10 "
+                  "inclusive.".format(b))
             continue
         else:
             break
@@ -206,78 +270,60 @@ def main():
     while cont:
         acceptable_options = 'abcdeumx'
         option = input("\n\tEnter option: ").lower()
-        if option not in acceptable_options:
+        if option not in acceptable_options or len(option) > 1:
             print('Error: unrecognized option [N]\n')
             display_options()
             continue
         if option == 'm':
             display_options()
-        elif option == 'a':  # todo: check for leading 0s
-            """If the user enters option A, the program will ask the user to 
-            enter a numeric value N and a base number B in the range between 
-            2 and 10 inclusive. If N is a non-negative number and B is valid 
-            (an integer between 2 and 10), the program will calculate and 
-            display the string representation of the number in base B. 
-            Otherwise, the program will display an appropriate message and 
-            reprompt to enter the invalid input. Note that the string method 
-            .isdigit() is useful here. """
+
+        elif option == 'a':
+
             n = valid_number()
-            b = valid_base()
+            b = valid_base("\n\tEnter Base: ")
             print("\n\t {} in base {}: {}".format(n, b, numtobase(n, b)))
 
         elif option == 'b':
-            """If the user enters option B, the program will ask the user to 
-            enter a string S and a base number B in the range between 2 and 
-            10 inclusive. If B is valid, it will calculate and display the 
-            decimal representation of the string. Otherwise, the program 
-            will display an appropriate message and reprompt to enter the 
-            invalid input """
+
             S = input("\n\tEnter string number S: ")
-            b = valid_base()
-            print(basetonum(S, b))
+            b = valid_base('\n\tEnter Base: ')
+            print("\n\t {} in base {}: {}".format(S, b, basetonum(S, b)))
 
         elif option == 'c':
-            """If the user enters option C, the program will ask the user to 
-            enter three inputs: a base B1, a base B2 (both of which are 
-            between 2 and 10, inclusive) and s_1, which is a string 
-            representing a number in base B1. If B1 and B2 are valid, 
-            it will calculate and display a string representing s_1 in base 
-            B2. Otherwise, the program will display an appropriate message 
-            and reprompt to enter the invalid input. """
-            S = input("\n\tEnter string number S: ")
-            B1 = valid_base()
-            B2 = valid_base()
 
-            print(basetobase(B1, B2, S))
+            B1 = valid_base("\n\tEnter base B1: ")
+            B2 = valid_base("\n\tEnter base B2: ")
+            S = input("\n\tEnter string number S: ")
+
+            print("\n\t {} in base {} is {} in base {}...".format(S, B1,
+                                                                  basetobase(
+                                                                      B1, B2,
+                                                                      S), B2))
 
         elif option == 'd':
-            """If the user enters option D, the program should ask the user 
-            to enter two binary strings. The program will calculate and 
-            display the sum of the two binary numbers. """
 
             binary_string_1 = input("\n\tEnter the first string number: ")
-            binary_string_2 = input("\n\tEnter the first string number: ")
-            print("\n\tThe sum: {}".format(addbinary(binary_string_1,
-                                                     binary_string_2)))
+            binary_string_2 = input("\n\tEnter the second string number: ")
+            print()
+            print()
+            print("\n\tThe sum:  {}".format(addbinary(binary_string_1,
+                                                      binary_string_2)))
 
         elif option == 'e':
-            """If the user enters option E, the program will ask the user to 
-            enter a binary string. The program will compress the image and 
-            display the run-length encoding string of the image. """
+
             s = input("\n\tEnter a binary string of an image: ")
             print("\n\t Original image: {}".format(s))
             print("\n\t Run-length encoded image: {}".format(compress(s)))
 
         elif option == 'u':
-            """If the user enters option U, the program will ask the user to 
-            enter a binary string representing a run-length encoding string 
-            of an image. The program will uncompress the image and display 
-            the original representation of the image. """
+
             s = input("\n\tEnter a run-length encoded string of an image: ")
             print("\n\t Run-length encoded image: {}".format(s))
             print("\n\t Original image: {}".format(uncompress(s)))
+
         elif option == 'x':
             cont = False
+
     print('May the force be with you.')
 
 
