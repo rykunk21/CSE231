@@ -85,11 +85,11 @@ def uncompress(s):
     output = ''
     curr = ''
     val = ''
-    for i in range( len( s ) ):
+    for i in range(len(s)):
         if i == 0:
             curr = s[i]
         elif i % 8 == 0:
-            val = basetonum( val, 2 )
+            val = basetonum(val, 2)
             output += curr * val
             val = ''
             curr = s[i]
@@ -155,7 +155,51 @@ def valid_number():
 
 def main():
     import math
+    BANNER = '''
+            .    .        .      .             . .     .        .          .          .
+             .                 .                    .                .
+      .               A long time ago in a galaxy far, far away...   .
+                  .   A terrible civil war burns throughout the  .        .     .
+                     galaxy: a rag-tag group of freedom fighters   .  .
+         .       .  has risen from beneath the dark shadow of the            .
+    .        .     evil monster the Galactic Empire has become.                  .  .
+        .      Outnumbered and outgunned,  the Rebellion burns across the   .    .
+    .      vast reaches of space and a thousand-thousand worlds, with only     .
+        . their great courage - and the mystical power known as the Force -
+         flaming a fire of hope. a                                    .
 
+                  .------.
+                .'::::::' `.
+                |: __   __ |
+                | <__] [__>|
+                `-.  __  .-'
+                  | |==| |
+                  | |==| |
+               __.`-[..]-`\__
+        _.--:``      ||   _``:::--._
+       | |  |.      .:'  (o) ::|  | |
+       |_|  |::..  // _       :|  |_|
+        ===-|:``` // /.\       |-===
+       |_| `:___//_|[ ]|_____.' |_| )
+        l=l   |\V/_=======_==|   l=l/
+      .-l=l   |`'==/=="======|  /|.:
+      | l l   |=="======\=_==| `-T l
+      `.l_l   |==============|   l_l
+        [_]  [__][__]____[_]__]  [_]
+        \\\ .'.--.- --   --. .`. |||.
+        \\\\| |  |    |    |  || ||||
+         \\\\   .'    |    |  |`.||||   
+          \\\\  |  LS |    `.   |||||     
+
+
+
+      ~~ Your mission: Tatooine planet is under attack from stormtroopers,
+                       and there is only one line of defense remaining        
+                       It is up to you to stop the invasion and save the planet~~    
+
+        '''
+
+    print(BANNER)
     cont = True
 
     display_options()
@@ -230,11 +274,12 @@ def main():
             of an image. The program will uncompress the image and display 
             the original representation of the image. """
             s = input("\n\tEnter a run-length encoded string of an image: ")
-            print( "\n\t Run-length encoded image: {}".format(s))
+            print("\n\t Run-length encoded image: {}".format(s))
             print("\n\t Original image: {}".format(uncompress(s)))
         elif option == 'x':
             cont = False
     print('May the force be with you.')
+
 
 if __name__ == "__main__":
     main()
