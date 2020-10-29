@@ -10,7 +10,7 @@ student names in alphabetical order.
 """
 
 
-with open('scores.txt', 'r') as scores:
+with open('../scores.txt', 'r') as scores:
     student_exams = []
     lines = sorted([tuple(line.strip().split()) for line in
                     scores.readlines()])

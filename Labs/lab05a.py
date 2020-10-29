@@ -17,7 +17,7 @@ min_bmi = None
 print('{:<12s}{:<12s}{:<12s}{:<12s}'.format('Name', 'Height(m)',
                                                   'Weight(kg)', 'BMI'))
 
-with open('data.txt') as fp1:  # open the file; set breakpoint
+with open('../data.txt') as fp1:  # open the file; set breakpoint
     total_height = 0  # keep track of total height
     total_weight = 0
     total_bmi = 0

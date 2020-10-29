@@ -17,7 +17,7 @@ with open('output.txt', 'w') as fp2:  # open another file in write mode
     fp2.write('{:<12s}{:<12s}{:<12s}{:<12s}\n'.format('Name', 'Height(m)',
                                                       'Weight(kg)', 'BMI'))
 
-    with open('data.txt') as fp1:  # open the file; set breakpoint
+    with open('../data.txt') as fp1:  # open the file; set breakpoint
         total_height = 0  # keep track of total height
         total_weight = 0
         total_bmi = 0
