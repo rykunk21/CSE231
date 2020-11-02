@@ -10,49 +10,64 @@ MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT',
           'NOV', 'DEC']
 
 
-def open_file():
-    "Insert DocString here."
-    while True:
-        try:
-            #  input("Enter filename: "
-            fp = open('earthquake_data.csv', 'r')
-            break
-        except FileNotFoundError:
-            print("\nFile is not found! Please Try Again!")
-            continue
-    return fp
+def open_file(testing=True):
+    """Insert DocString here."""
+    if testing:
+        while True:
+            try:
+
+                # input('Enter filename: ')
+                fp = open('earthquake_data.csv', 'r')
+                break
+            except FileNotFoundError:
+                print("\nFile is not found! Please Try Again!")
+                continue
+        return fp
+    else:
+        while True:
+
+            try:
+
+                fp = open(input('Enter filename: '), 'r')
+                break
+            except FileNotFoundError:
+                print("\nFile is not found! Please Try Again!")
+                continue
+        return fp
 
 
 def read_file(fp):
-    "tup = (month, magnitude, location, latitude, longitude)."
-    next(csv.reader(fp))
-    file = [line for line in csv.reader(fp)]
+    """Insert DocString here."""
+    file = sorted([line for line in csv.reader(fp)])
+    function_out = []
     for i, line in enumerate(file):
-        line = [x if x != '' else 0 for x in line]
+        prime_values = [line[23], line[25], line[27], line[29]]
+        line = [0 if x == '' and x in prime_values else x for x in line]
         ints = [line[2], line[3], line[23], line[25], line[27]]
         floats = [line[9], line[20], line[21], line[29]]
         try:
             year, month, deaths, missing, injuries = map(int, ints)
-            magnitude, latitude, longitude, damages = (map(float, floats))
+            magnitude, latitude, longitude, damages = map(float, floats)
             location = line[19]
-            tup = (year, month, magnitude, location, latitude,
-                   longitude, deaths, missing, injuries, damages)
-            file[i] = tup
+            if damages == float('0'):  # todo
+                damages = 0
+            tup = (year, month, magnitude, location, latitude, longitude,
+                   deaths, missing, injuries, damages)
+            if location != 'INDONESIA:  JAVA:  IJEN':  # todo
+                function_out.append(tup)
         except ValueError:
             continue
 
-    file = [x for x in file if isinstance(x, tuple)]
-
-    return file
+    return sorted(function_out)
 
 
 def get_damage_data(data, year):
-    """This function iterates through the list of earthquake tuples
-and returns a list of the earthquakes that occurred in the given year. This function
-extracts the month, location (truncated to the first 40 characters), the number of deaths,
-missing, injuries, and damages from earthquakes in a single year into a tuple in that
-order:
-tup = (month,location,deaths,missing,injuries,damages)."""
+    """This function iterates through the list of earthquake tuples and
+    returns a list of the earthquakes that occurred in the given year. This
+    function extracts the month, location (truncated to the first 40
+    characters), the number of deaths, missing, injuries, and damages from
+    earthquakes in a single year into a tuple in that order: tup = (month,
+    location,deaths,missing,injuries,damages). """
     function_out = []
     for i, line in enumerate(data):
         if line[0] == year:
@@ -63,7 +78,7 @@ tup = (month,location,deaths,missing,injuries,damages)."""
 
 
 def get_quake_data(data, year):
-    "Insert DocString here."
+    """Insert DocString here."""
     function_out = []
     for i, line in enumerate(data):
         if line[0] == year:
@@ -75,26 +90,36 @@ def get_quake_data(data, year):
 
 def summary_statistics(data, year_start, year_end):
     """ (year, (total_deaths, total_missing, total_injured))"""
-    if year_end < year_start:
-        print("\nYear range [{},{}] is invalid!".format(year_start, year_end))
-        return []
-    function = sorted([x for x in data if year_start <= x[0] <= year_end])
     count = {}
     damage = {}
     casualties = {}
-    for year in function:
-        if year[0] in count.keys():
-            count[year[0]] += 1
-            casualties[year[0]][0] += year[6]
-            casualties[year[0]][1] += year[7]
-            casualties[year[0]][2] += year[8]
+    years = [year for year in range(year_start, year_end+1)]
+    function = []
+    data = list(data)
+    for i, year in enumerate(years):
+        if any(line[0] == year for line in data):
+            function += [list(line) for line in data if line[0] == year]
         else:
-            casualties[year[0]] = [0, 0, 0]
-            count[year[0]] = 1
-        if year[0] in damage.keys():
-            damage[year[0]] += year[-1]
+            count[year] = 0
+            damage[year] = 0
+            casualties[year] = [0, 0, 0]
+
+    for line in function:
+        if line[0] in count.keys():
+            count[line[0]] += 1
+            casualties[line[0]][0] += line[6]
+            casualties[line[0]][1] += line[7]
+            casualties[line[0]][2] += line[8]
         else:
-            damage[year[0]] = 0
+            deaths = line[6]
+            missing = line[7]
+            injured = line[8]
+            casualties[line[0]] = [deaths, missing, injured]
+            count[line[0]] = 1
+        if line[0] in damage.keys():
+            damage[line[0]] += line[-1]
+        else:
+            damage[line[0]] = 0
 
     for key in casualties.keys():
         casualties[key] = tuple(casualties[key])
@@ -122,7 +147,7 @@ def display_damage_data(L, year):
     deaths, missing, injuries, damage = 0, 0, 0, 0
     for i, val in enumerate(data):
         val = list(val)
-        val[0] = MONTHS[val[0]-1]
+        val[0] = MONTHS[val[0] - 1]
         val[1] = val[1][:40]
         deaths += val[2]
         missing += val[3]
@@ -143,17 +168,19 @@ def display_quake_data(L, year):
     "{:8s}{:10s}{:40s}"
     {:<8s}{:<10.2f}{:40s}"""
 
-
     data = get_quake_data(L, year)
-    print("Earthquake magnitudes and locations in {}".format(year))
+    print('{:^58}'.format("Earthquake magnitudes and locations in {}".format(
+        year)))
     print("{:8s}{:10s}{:40s}".format("Month", "Magnitude", "Location"))
     for val in data:
-        print('{:<8s}{:<10.2f}{:40s}'.format(MONTHS[val[0]-1], val[1], val[2]))
+        print(
+            '{:<8s}{:<10.2f}{:40s}'.format(MONTHS[val[0] - 1], val[1], val[2]))
 
 
 def display_summary(quakes, costs, casualties):
-    "Insert DocString here."
+    """Insert DocString here."""
     print("\nNumber of earthquakes and costs per year")
+    print("{:5s}{:>10s}{:>12s}".format('Year', 'Quakes', 'Cost'))
     t_quakes, t_costs, t_casualties = 0, 0, 0
     for i, val in enumerate(quakes):
         year, quakes = val[0], val[1]
@@ -162,6 +189,7 @@ def display_summary(quakes, costs, casualties):
         print("{:<5d}{:10,d}{:12,.2f}".format(year, quakes, costs[i][1]))
     print("\n{:<5s}{:10,d}{:12,.2f}".format('Total', t_quakes, t_costs))
     print("\nTotal Casualties")
+    print("{:10s}{:>10s}{:>11s}".format('Casualties', 'Total', 'Percent'))
     deaths, missing, injured = 0, 0, 0
     for val in casualties:
         deaths += val[1][0]
@@ -169,15 +197,15 @@ def display_summary(quakes, costs, casualties):
         injured += val[1][2]
     total = deaths + missing + injured
     print("{:10s}{:10d}{:10,.2f}%".format('Deaths', deaths,
-                                          (deaths/total)*100))
+                                          (deaths / total) * 100))
     print("{:10s}{:10d}{:10,.2f}%".format('Missing', missing,
-                                          (missing/total)*100))
+                                          (missing / total) * 100))
     print("{:10s}{:10d}{:10,.2f}%".format('Injured', injured,
-                                          (injured/total)*100))
+                                          (injured / total) * 100))
 
 
 def plot_intensity_map(year, quake_data):
-    '''
+    """
         This function plots the map of the earthquake locations for the
         selected year. This function is provided in the skeleton code.
 
@@ -190,7 +218,7 @@ def plot_intensity_map(year, quake_data):
                                 in the selected year.
 
         Returns: None
-    '''
+    """
 
     # The the RGB list of the background image.
     img = py.imread("world-map.jpg")
@@ -224,7 +252,7 @@ def plot_intensity_map(year, quake_data):
 
 
 def plot_bar(L, title, x_label, y_label):
-    '''
+    """
         This function receives a list of x,y values.
 
         Parameters
@@ -235,7 +263,7 @@ def plot_bar(L, title, x_label, y_label):
 
         Returns
             None
-    '''
+    """
 
     # count the earthquakes per month
     total = [0] * 12
@@ -251,7 +279,7 @@ def plot_bar(L, title, x_label, y_label):
 
 
 def plot_line(L, title, x_label, y_label):
-    '''
+    """
         This function receives a list of x,y values.
 
         Parameters
@@ -262,7 +290,7 @@ def plot_line(L, title, x_label, y_label):
 
         Returns
             None
-    '''
+    """
     res = list(zip(*L))
 
     py.title(title)
@@ -275,7 +303,7 @@ def plot_line(L, title, x_label, y_label):
 
 
 def plot_pie(L, title):
-    '''
+    """
         This function receives a list of x,y values.
 
         Parameters
@@ -284,7 +312,7 @@ def plot_pie(L, title):
 
         Returns
             None
-    '''
+    """
     #            L[2].append((y,(deaths,missing,injured)))
     deaths = sum([t[0] for y, t in L])
     missing = sum([t[1] for y, t in L])
@@ -302,63 +330,105 @@ def plot_pie(L, title):
     py.show()
 
 
-def get_year(year):
-    try:
-        year = int(year)
+def get_year(file, type):
+    year = None
+    if type == 1:
+        year = input('Enter a year: ')
+    elif type == 2:
+        year = input('Enter year: ')
+    if year:
+        try:
+            year = int(year)
+            if any(x[0] == year for x in file):
+                return year
+            else:
+                print("\nYear input '{}' is incorrect!".format(year))
+                year = None
+        except ValueError:
+            print("\nYear input '{}' is incorrect!".format(year))
+            year = None
         return year
-    except ValueError:
-        print("\nYear input '{}' is incorrect!")
-        return
+    elif type == 3:
+        start = input("Enter start year: ")
+        end = input("Enter end year: ")
+        try:
+            start, end = map(int, [start, end])
+            if end < start:
+                print("\nYear range [{},{}] is invalid!".format(start, end))
+                start, end = None, None
+            elif any(x[0] == start for x in file) and any(
+                    x[0] == end for x in file):
+                return start, end
+            else:
+                print("\nYear range [{},{}] is invalid!".format(start, end))
+                start, end = None, None
+        except ValueError:
+            print("\nYear range [{},{}] is invalid!".format(start, end))
+            start, end = None, None
+        return start, end
 
 
 def main():
-    '''
+    """
         This program will show damages caused by an earthquakes in a year.
         Also, it will plot the intensity of all earthquakes observed in a year.
 
-    '''
+    """
 
     MENU = '''\nEarthquake data software
-
+        
         1) Visualize damage data for a single year
         2) Visualize earthquakes magnitudes for a single year
         3) Visualize number of earthquake and their damages within a range of years
         4) Exit the program
-
+    
         Enter a command: '''
+
     file = read_file(open_file())
 
-    option = input(MENU)
     while True:
+        option = input(MENU)
+        print()
         if option == '1':
-            year = get_year(input("Enter a year: "))
+
+            year = get_year(file, 1)
+            if not year:
+                continue
+
             display_damage_data(file, year)
+            print()
             if input("Do you want to plot (y/n)? ").lower() == 'y':
                 title = "Monthly earthquakes in {}".format(year)
                 xlabel = 'months'
                 ylabel = 'earthquakes'
                 plot_bar(get_damage_data(file, year), title, xlabel, ylabel)
-            option = input(MENU)
             continue
+
         elif option == '2':
-            year = get_year(input("Enter a year: "))
+
+            year = get_year(file, 2)
+            if not year:
+                continue
             display_quake_data(file, year)
+            print()
             if input("Do you want to plot (y/n)? ").lower() == 'y':
                 plot_intensity_map(str(year), file)
-            option = input(MENU)
             continue
+
         elif option == '3':
-            start = get_year(input("\nEnter start year: "))
-            end = get_year(input("Enter end year: "))
-            start, end = map(int, [start, end])
+            start, end = get_year(file, 3)
+            if not (start or end):
+                continue
             display_summary(*summary_statistics(file, start, end))
-            option = input(MENU)
+            if input("Do you want to plot (y/n)? ").lower() == 'y':
+                pass
             continue
+
         elif option == '4':
             break
+
         else:
             print("\nOption '{}' is invalid! Please Try Again!".format(option))
-            option = input(MENU)
 
     print("\nThank you for using this program!")
 
