@@ -1,0 +1,12 @@
+
+Scorpion Solitaire uses one deck (52 cards). You have 7 tableau piles.
+Three rows of 7 cards are dealt - the first 4 cards face down and the next
+3 face up in each row. Then four more rows of 7 cards are dealt, all face up.
+The remaining 3 cards are put face down as a reserve.
+
+
+The object of the game
+To build four sequences down in suit within the tableau, each running from
+King to Ace.
+
+

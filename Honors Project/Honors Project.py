@@ -117,4 +117,17 @@ class Deck(object):
         print()
 
 def main():
-    pass
+    deck = Deck()
+    for i in range(7):
+        break
+        if i == 0:
+            pass
+        else:
+            print('\n')
+        for j in range(7):
+            print(deck.deal(), end=' ')
+    deck.display()
+    deck.shuffle()
+    deck.display()
+
+main()
