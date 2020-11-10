@@ -119,7 +119,6 @@ class Deck(object):
 def main():
     deck = Deck()
     for i in range(7):
-        break
         if i == 0:
             pass
         else:

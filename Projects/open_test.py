@@ -9,7 +9,7 @@ def open_file(testing=True):
             try:
 
                 # input('Enter filename: ')
-                fp = open('earthquake_data_tiny.csv', 'r')
+                fp = open('proj07/earthquake_data_tiny.csv', 'r')
                 break
             except FileNotFoundError:
                 print("\nFile is not found! Please Try Again!")
