@@ -1,0 +1,74 @@
+##############################################################################
+Computer Project 09
+
+Algorithm
+
+##############################################################################
+
+open_file(str) -> file pointer
+    str = year
+    fp open(year.csv)
+    if exists
+        return fp
+    else
+        return none
+
+
+build_dictionary(fp) --> dict
+    fp = file_pointer; open file
+    next(csv.reader(fp), None)
+
+    build dictionary
+    for line in csv.reader(fp):
+        dictionary[region] = dict(countries)
+
+    {‘Region’:
+        {'Country1’: (('happiness rank', 'happiness score'), ('economy', 'trust'),
+                      ('family', 'health', 'freedom')),
+        'Country2': (('happiness rank', 'happiness score'), ('economy', 'trust'),
+                      ('family', 'health', 'freedom')),
+    …}
+
+
+    for line in csv.reader(fp):
+        data[line[2]] = dict({line[1]: (('happiness rank', 'happiness score'), ('economy', 'trust'),
+                                        ('family', 'health', 'freedom'))}
+
+
+    return dict
+
+    Region – column 2
+    Country - column 1
+    Happiness Rank - column 3
+    Happiness Score - column 4
+    Economy (GDP per Capita – column 6
+    Trust (Government Corruption) - column 10
+    Family – column 7
+    Health (Life Expectancy) – column 8
+    Freedom – column 9
+
+                            CLOSE FILE
+
+search_by_country(string,dict,bool) --> list
+    country = string
+
+    list = dict[country].split()
+    for val in list:
+        gather value or discard other value
+
+    if bool:
+        '{:<10s}{:<5d}' # for ints
+        '{:<10s}{:<s}' # for strings
+        '{:<10s}{:<5.2f}'
+        print(*line of data, '\n')
+    else:
+        return(line of data)
+
+    Year: 2015
+    Country: Ireland
+    Rank: 18
+    Score: 6.94
+    Family: 1.37
+    Health: 0.90
+    Freedom: 0.62
+
