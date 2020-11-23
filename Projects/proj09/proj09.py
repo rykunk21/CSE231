@@ -11,7 +11,7 @@ def open_file(year=None):
     """
     Opens a file from a year in the format (year + .csv)
 
-    :param year: a year from the user
+    :param year: str
     :return: file pointer
     """
     try:
@@ -25,8 +25,8 @@ def build_dictionary(fp):
     """
     Iterates over the file and returns
 
-    :param fp: file pointer given from the open_file function
-    :return: dict of data
+    :param fp: file pointer
+    :return: dict
     """
     # use the next function to skip a line, with a default of None
     next(csv.reader(fp), None)
@@ -48,7 +48,7 @@ def build_dictionary(fp):
         # don't init a new region if it already exists
         if line[assn['Region']] not in data.keys():
             data[line[assn['Region']]] = dict()
-        try:
+        try:    # test if data is available
             data[line[assn['Region']]].update(dict({line[assn['Country']]:
                                               ((int(line[assn['Happiness Rank']]),
                                                    float(line[assn['Happiness '
@@ -66,7 +66,7 @@ def build_dictionary(fp):
 
 
 def combine_dictionaries(year, subD, superD):
-    ''' Docstring '''
+    """ Add a year into an existing super dictionary """
     superD[year] = subD
     return superD
 
@@ -76,13 +76,13 @@ def search_by_country(country, superD, print_boolean):
     this function will gather relevant data from superD param and display
     it to the console if print_boolean. Else return list of data
 
-    :param country: string containing the country name
-    :param superD: dictionary of data
-    :param print_boolean: True or False
+    :param country: str
+    :param superD: dict
+    :param print_boolean: Bool
     """
     print_deny = []
     # check the superD for the country values:
-    data = []
+    data = []   # initialize a place to add data
     for year in superD.keys():
         for region in superD[year]:
             for __country in superD[year][region]:
@@ -91,9 +91,9 @@ def search_by_country(country, superD, print_boolean):
                 else:
                     continue
                 break
-        if len(data) < 1:
+        if len(data) < 1:   # if country wasn't found, keep iterating
             continue
-        else:
+        else:   # initialize data to be printed or returned
             rank = int(data[0][0])
             score = float(data[0][1])
             family = float(data[2][0])
@@ -111,25 +111,41 @@ def search_by_country(country, superD, print_boolean):
             print('-' * 20)
         else:
             print_deny.append((score, family, health, freedom))
-    if len(print_deny) > 1:
+    if len(print_deny) > 1:   # check if print didn't execute
         return print_deny
 
 
 def top_10_ranks_across_years(superD, year1, year2):
-    ''' Docstring '''
+    """
+    Search the data for countries statistics in a multiple years. This data
+    will be passed to print_ranks() function which will print the data to
+    the console
 
+    :param superD: dict
+    :param year1: str
+    :param year2: str
+    :return: tuple(list, list)
+    """
+
+    # init place to store data
     year1list = []
     year2list = []
+    # function out will end up storing the year2list in correct order
     function_out = []
+
+    # simple loop to get the sorted top 10 for year 1
     for region in superD[year1]:
         for country in superD[year1][region]:
             year1list.append((country, superD[year1][region][country][0][0]))
     year1list = sorted(year1list, key=itemgetter(1))[:10]
 
+    # grab year2 data, we are not worried about the countries yet, just rank
     for region in superD[year2]:
         for country in superD[year2][region]:
             year2list.append((country, superD[year2][region][country][0][0]))
 
+    # iterate over the countries in year1, and append the data to function
+    # out upon a match. This will preserve accuracy and order
     for entry in year1list:
         for exist in year2list:
             if exist[0] == entry[0]:
@@ -139,21 +155,40 @@ def top_10_ranks_across_years(superD, year1, year2):
 
 
 def print_ranks(superD, list1, list2, year1, year2):
-    ''' Docstring '''
+    """
+    Prints the data from top_10_ranks_across_years() to the console
+
+    :param superD: dict
+    :param list1: list
+    :param list2: list
+    :param year1: str
+    :param year2: str
+    :return:
+    """
+    # print header line
     print('{:<15s} {:>7s} {:>7s} {:>12s}'.format('Country', str(year1),
                                                  str(year2),
                                                  'Avg.H.Score'))
+    # grab values and indices
     for i, entry in enumerate(list1):
         country, rank1 = entry
-        rank2 = list2[i][1]
+        rank2 = list2[i][1]  # get corresponding index
         deny = search_by_country(country, superD, False)
         score = (deny[0][0] + deny[1][0]) / 2
+        # print line
         print('{:<15s} {:>7d} {:>7d} {:>12.2f}'.format(country, rank1,
                                                        rank2, score))
 
 
 def prepare_plot(country1, country2, superD):
-    ''' Docstring '''
+    """
+    initialize data for bar plot function to plot
+
+    :param country1: str
+    :param country2: str
+    :param superD: dict
+    :return: tup(tup, tup) containing search
+    """
     tup1 = search_by_country(country1, superD, False)
     tup2 = search_by_country(country2, superD, False)
 
@@ -161,7 +196,15 @@ def prepare_plot(country1, country2, superD):
 
 
 def bar_plot(country1, country2, countrylist1, countrylist2):
-    ''' Bar plot comparing two countries.'''
+    """
+    plot the data from prepare plot
+
+    :param country1: str
+    :param country2: str
+    :param countrylist1: list
+    :param countrylist2: list
+    :return: plot
+    """
     fig = plt.figure()
     ax = fig.add_subplot(111)
     N = 4
@@ -188,8 +231,27 @@ def bar_plot(country1, country2, countrylist1, countrylist2):
     plt.show()
 
 
+def check(country, superD):
+    """
+    checks if the country is in the superD
+    :param country: str
+    :param superD: dict
+    :return: str or None
+    """
+    for year in superD:
+        for region in superD[year]:
+            for country__ in superD[year][region]:
+                if country__ == country:
+                    return country
+    return None
+
+
 def main():
-    ''' Docstring '''
+    """
+    Interaction with the user to display a menu and divert options to
+    functions
+
+    """
 
     BANNER = '''
                     __ooooooooo__
@@ -223,38 +285,47 @@ def main():
     :'''
     print(BANNER)
 
+
+
+    superD = {}  # initialize superD for an argument
+
+    # gather desired years
     years = [year.strip() for year in input('Input Years '
                                             'comma-separated as '
                                             'A,B: ').split(',')]
 
-    superD = {}
-
-    # YOUR CODE TO READ THE FILES AND BUILD SUPER DICTIONARY
     for year in years:
         print('Opening Data file for year {}: '.format(year))
         superD[int(year)] = build_dictionary(open_file(year))
 
 
-
     user_choice = input(MENU)
 
     while user_choice.lower() != 'x':
-        # YOUR CODE TO RESPOND TO USER CHOICES
+
         if user_choice == '1':
-            country = input("[ ? ] Please specify the country: ")
+
+            country = check(input("[ ? ] Please specify the country: "),
+                            superD)
+            while not country:
+                print("[ - ] Incorrect input. Try again.")
+                country = check(input("[ ? ] Please specify the country: "),
+                                superD)
             search_by_country(country, superD, True)
 
         elif user_choice == '2':
             l1, l2 = top_10_ranks_across_years(superD, int(years[0]),
                                                int(years[1]))
-
             print_ranks(superD, l1, l2, int(years[0]), int(years[1]))
 
         elif user_choice == '3':
-            countries = input("[ ? ] Please specify the two countries (A,"
+            countries = input("[ ? ] Please specify the two countries "
+                                "(A,"
                               "B): ").split(',')
             for country in countries:
                 country.strip()
+
+
             print('{:<20s} {:<9s} {:<8s} {:<8s} {:<8s}'.format("\nCountry",
                                                                "Hap.Score",
                                                                "Family",
@@ -274,12 +345,20 @@ def main():
                 l1, l2 = prepare_plot(countries[0], countries[1], superD)
                 bar_plot(countries[0], countries[1], l1, l2)
 
+        elif user_choice.lower() == 'c':  # entry to change years
+            years = [year.strip() for year in input('Input Years '
+                                                    'comma-separated as '
+                                                    'A,B: ').split(',')]
+            superD = {}  # initialize superD for an argument
+
+            for year in years:
+                print('Opening Data file for year {}: '.format(year))
+                superD[int(year)] = build_dictionary(open_file(year))
+
+
+
         else:
             print("[ - ] Incorrect input. Try again.")
         user_choice = input(MENU)
-
-
-
 if __name__ == '__main__':
     main()
-
