@@ -48,16 +48,20 @@ def build_dictionary(fp):
         # don't init a new region if it already exists
         if line[assn['Region']] not in data.keys():
             data[line[assn['Region']]] = dict()
-        data[line[assn['Region']]].update(dict({line[assn['Country']]:
-                                          ((int(line[assn['Happiness Rank']]),
-                                               float(line[assn['Happiness '
-                                                           'Score']])),
-                                              (float(line[assn['Economy']]),
-                                               float(line[assn['Trust']])),
-                                              (float(line[assn['Family']]),
-                                               float(line[assn['Health']]),
-                                               float(line[assn[
-                                                   'Freedom']])))}))
+        try:
+            data[line[assn['Region']]].update(dict({line[assn['Country']]:
+                                              ((int(line[assn['Happiness Rank']]),
+                                                   float(line[assn['Happiness '
+                                                               'Score']])),
+                                                  (float(line[assn['Economy']]),
+                                                   float(line[assn['Trust']])),
+                                                  (float(line[assn['Family']]),
+                                                   float(line[assn['Health']]),
+                                                   float(line[assn[
+                                                       'Freedom']])))}))
+        except ValueError:
+            continue
+
     return data
 
 
@@ -150,7 +154,10 @@ def print_ranks(superD, list1, list2, year1, year2):
 
 def prepare_plot(country1, country2, superD):
     ''' Docstring '''
-    pass  # replace with your code
+    tup1 = search_by_country(country1, superD, False)
+    tup2 = search_by_country(country2, superD, False)
+
+    return tuple(tup1[0]), tuple(tup2[0])
 
 
 def bar_plot(country1, country2, countrylist1, countrylist2):
@@ -255,16 +262,17 @@ def main():
                                                                "Freedom"))
             for country in countries:
                 data = search_by_country(country, superD, False)
-                score = (data[0][0] + data[1][0]) / 2
-                family = (data[0][1] + data[1][1]) / 2
-                health = (data[0][2] + data[1][2]) / 2
-                freedom = (data[0][3] + data[1][3]) / 2
+                score = data[0][0]
+                family = data[0][1]
+                health = data[0][2]
+                freedom = data[0][3]
                 print("{:<20s} {:<9.2f} {:<8.2f} {:<8.2f} {:<8.2f}".format(
                     country, score, family, health, freedom))
 
             plot = input("[ ? ] Plot (y/n)? ")
-
-
+            if plot.lower() == 'y':
+                l1, l2 = prepare_plot(countries[0], countries[1], superD)
+                bar_plot(countries[0], countries[1], l1, l2)
 
         else:
             print("[ - ] Incorrect input. Try again.")
