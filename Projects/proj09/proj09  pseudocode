@@ -72,3 +72,14 @@ search_by_country(string,dict,bool) --> list
     Health: 0.90
     Freedom: 0.62
 
+def top_10_ranks_across_years(superD, int, int) --> list, list
+
+    for year in superD:
+        for region in superD[year]
+            for country in superD[year][region]
+                list.append(superD[year][region][country])
+
+    sort year1list key = 1
+    for entry in year1list:
+        countries.append(entry[0]
+

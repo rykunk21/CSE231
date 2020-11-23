@@ -3,6 +3,10 @@ from operator import itemgetter
 import numpy as np
 import matplotlib.pyplot as plt
 
+# link
+# https://www.kaggle.com/unsdsn/world-happiness
+
+
 def open_file(year=None):
     """
     Opens a file from a year in the format (year + .csv)
@@ -45,13 +49,15 @@ def build_dictionary(fp):
         if line[assn['Region']] not in data.keys():
             data[line[assn['Region']]] = dict()
         data[line[assn['Region']]].update(dict({line[assn['Country']]:
-                                          ((line[assn['Happiness Rank']],
-                                               line[assn['Happiness Score']]),
-                                              (line[assn['Economy']],
-                                               line[assn['Trust']]),
-                                              (line[assn['Family']],
-                                               line[assn['Health']],
-                                               line[assn['Freedom']]))}))
+                                          ((int(line[assn['Happiness Rank']]),
+                                               float(line[assn['Happiness '
+                                                           'Score']])),
+                                              (float(line[assn['Economy']]),
+                                               float(line[assn['Trust']])),
+                                              (float(line[assn['Family']]),
+                                               float(line[assn['Health']]),
+                                               float(line[assn[
+                                                   'Freedom']])))}))
     return data
 
 
@@ -61,7 +67,7 @@ def combine_dictionaries(year, subD, superD):
     return superD
 
 
-def search_by_country(country, superD, print_boolean, years):
+def search_by_country(country, superD, print_boolean):
     """
     this function will gather relevant data from superD param and display
     it to the console if print_boolean. Else return list of data
@@ -70,49 +76,76 @@ def search_by_country(country, superD, print_boolean, years):
     :param superD: dictionary of data
     :param print_boolean: True or False
     """
+    print_deny = []
     # check the superD for the country values:
     data = []
-    for region in superD.keys():
-        for __country in superD[region]:
-            if __country == country:
-                data = [tup for tup in superD[region][country]]
-            else:
-                continue
-            break
+    for year in superD.keys():
+        for region in superD[year]:
+            for __country in superD[year][region]:
+                if __country == country:
+                    data = [tup for tup in superD[year][region][country]]
+                else:
+                    continue
+                break
         if len(data) < 1:
             continue
         else:
-            break
-
-    print_deny = []
-    for year in years:
-        rank = int(data[0][0])
-        score = float(data[0][1])
-        family = float(data[2][0])
-        health = float(data[2][1])
-        freedom = float(data[2][2])
+            rank = int(data[0][0])
+            score = float(data[0][1])
+            family = float(data[2][0])
+            health = float(data[2][1])
+            freedom = float(data[2][2])
         if print_boolean:
+            print()
             print('{:<10s}{:<5d}'.format('Year:', year))
             print('{:<10s}{:<s}'.format('Country:', country))
             print('{:<10s}{:<5d}'.format('Rank:', rank))
-            print('{:<10s}{:<5.2f}'.format('Score', score))
+            print('{:<10s}{:<5.2f}'.format('Score:', score))
             print('{:<10s}{:<5.2f}'.format('Family:', family))
             print('{:<10s}{:<5.2f}'.format('Health:', health))
             print('{:<10s}{:<5.2f}'.format('Freedom:', freedom))
-            print('-'*20)
+            print('-' * 20)
         else:
             print_deny.append((score, family, health, freedom))
-    return print_deny
+    if len(print_deny) > 1:
+        return print_deny
 
 
 def top_10_ranks_across_years(superD, year1, year2):
     ''' Docstring '''
-    pass  # replace with your code
+
+    year1list = []
+    year2list = []
+    function_out = []
+    for region in superD[year1]:
+        for country in superD[year1][region]:
+            year1list.append((country, superD[year1][region][country][0][0]))
+    year1list = sorted(year1list, key=itemgetter(1))[:10]
+
+    for region in superD[year2]:
+        for country in superD[year2][region]:
+            year2list.append((country, superD[year2][region][country][0][0]))
+
+    for entry in year1list:
+        for exist in year2list:
+            if exist[0] == entry[0]:
+                function_out.append(exist)
+
+    return year1list, function_out
 
 
 def print_ranks(superD, list1, list2, year1, year2):
     ''' Docstring '''
-    pass  # replace with your code
+    print('{:<15s} {:>7s} {:>7s} {:>12s}'.format('Country', str(year1),
+                                                 str(year2),
+                                                 'Avg.H.Score'))
+    for i, entry in enumerate(list1):
+        country, rank1 = entry
+        rank2 = list2[i][1]
+        deny = search_by_country(country, superD, False)
+        score = (deny[0][0] + deny[1][0]) / 2
+        print('{:<15s} {:>7d} {:>7d} {:>12.2f}'.format(country, rank1,
+                                                       rank2, score))
 
 
 def prepare_plot(country1, country2, superD):
@@ -183,21 +216,58 @@ def main():
     :'''
     print(BANNER)
 
+    years = [year.strip() for year in input('Input Years '
+                                            'comma-separated as '
+                                            'A,B: ').split(',')]
+
     superD = {}
 
     # YOUR CODE TO READ THE FILES AND BUILD SUPER DICTIONARY
+    for year in years:
+        print('Opening Data file for year {}: '.format(year))
+        superD[int(year)] = build_dictionary(open_file(year))
 
-    d = build_dictionary(open_file('2015'))
 
-    print(search_by_country('Ireland', d, False, [2015]))
 
     user_choice = input(MENU)
 
     while user_choice.lower() != 'x':
         # YOUR CODE TO RESPOND TO USER CHOICES
-        pass  # replace with your code
-        #        else:
-        #            print("[ - ] Incorrect input. Try again.")
+        if user_choice == '1':
+            country = input("[ ? ] Please specify the country: ")
+            search_by_country(country, superD, True)
+
+        elif user_choice == '2':
+            l1, l2 = top_10_ranks_across_years(superD, int(years[0]),
+                                               int(years[1]))
+
+            print_ranks(superD, l1, l2, int(years[0]), int(years[1]))
+
+        elif user_choice == '3':
+            countries = input("[ ? ] Please specify the two countries (A,"
+                              "B): ").split(',')
+            for country in countries:
+                country.strip()
+            print('{:<20s} {:<9s} {:<8s} {:<8s} {:<8s}'.format("\nCountry",
+                                                               "Hap.Score",
+                                                               "Family",
+                                                               "Life Ex.",
+                                                               "Freedom"))
+            for country in countries:
+                data = search_by_country(country, superD, False)
+                score = (data[0][0] + data[1][0]) / 2
+                family = (data[0][1] + data[1][1]) / 2
+                health = (data[0][2] + data[1][2]) / 2
+                freedom = (data[0][3] + data[1][3]) / 2
+                print("{:<20s} {:<9.2f} {:<8.2f} {:<8.2f} {:<8.2f}".format(
+                    country, score, family, health, freedom))
+
+            plot = input("[ ? ] Plot (y/n)? ")
+
+
+
+        else:
+            print("[ - ] Incorrect input. Try again.")
         user_choice = input(MENU)
 
 
