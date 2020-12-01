@@ -1,0 +1,37 @@
+
+initialize:
+    stock = cards.Deck().shuffle()
+    foundation = [[],[],[],[]]
+    tableau = [[],[],[],[],[],[],[]]
+    for col in tableau
+        stock.deal * 7
+        for i in range(3)
+            card.flip
+    tableau = [list(col) for col in zip(*tableau)]  # invert the matrix
+
+deal from stock:
+    for i, card in stock:
+        tableau[i].append(stock.pop(0))
+
+validate_move (tableau,src_col,src_row,dst_col):
+    An empty column can only have a king (and its sequence) moved to it.
+    A card (and its sequence) can only be moved to a card of the same suit and whose rank is
+        one greater
+    try:
+        usr card = tableau[src_col][src_row]
+    except index error:
+        return False
+
+    if len(dst_col) == 0:
+        if usr card.rank() == '13'
+            return True
+        else:
+            return False
+
+    look card = dst_col[-1]
+    if usr card == look card.rank - 1 and usr card.suit == look card.suit:
+        return True
+    else:
+        return false
+
+
