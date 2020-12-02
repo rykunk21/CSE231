@@ -1,4 +1,4 @@
-from Projects.proj09 import proj09 as p9
+
 
 def pretty_print_dict(D: dict, info: bool=False) -> None:
     '''

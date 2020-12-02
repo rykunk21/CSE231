@@ -31,13 +31,9 @@ def initialize():
     foundation = [[], [], [], []]
 
     tableau = [[], [], [], [], [], [], []]  # initialize in reverse
-    for row in tableau:
-        for i in range(7):
-            row.append(stock.deal())
-
-    # invert the matrix using zip function
-    tableau = [list(a) for a in zip(*tableau)]
     for i, col in enumerate(tableau):
+        for i in range(7):
+            col.append(stock.deal())
         if i == 0 or i == 1 or i == 2:  # flip top left 3x3
             for j in range(3):
                 col[j].flip_card()  # flip the card
@@ -105,22 +101,29 @@ def validate_move(tableau, src_col, src_row, dst_col):
     except IndexError:
         return False
 
-    if len(dst_col) == 0:
+    if len(tableau[dst_col]) == 0:
         if usr_card.__rank == 13:
             return True
         else:
             return False
 
-    look_card = dst_col[-1]
-    if usr_card.__rank == (look_card.__rank - 1) and \
-       usr_card.__suit == look_card.__suit:
+    look_card = tableau[dst_col][-1]
+    if usr_card.rank() == look_card.rank() - 1 and \
+       usr_card.suit() == look_card.suit():
         return True
     else:
         return False
 
 def move(tableau, src_col, src_row, dst_col):
     '''Docstring'''
-    pass
+    col, row, dst = list(map(lambda v: v-1, [src_col, src_row, dst_col]))
+
+    if validate_move(tableau, col, row, dst):
+        for i in range(len(tableau[col]) - row):
+            tableau[dst].append(tableau[col].pop(row))
+        return True
+    else:
+        return False
 
 
 def check_sequence(column_lst):
@@ -135,7 +138,10 @@ def move_to_foundation(tableau, foundation):
 
 def check_for_win(foundation):
     '''Docstring'''
-    pass
+    if any(len(poss) != 13 for poss in foundation):
+        return False
+    else:
+        return True
 
 
 def get_option():
@@ -152,6 +158,9 @@ def get_option():
     option_list = option.strip().split()
 
     opt_char = option_list[0].upper()
+
+    if opt_char == 'P':
+        return ['P']
 
     if opt_char in 'DRHQ' and len(option_list) == 1:  # correct format
         return [opt_char]
@@ -175,7 +184,18 @@ display(stock, tableau, foundation)
 print(MENU)
 option_lst = get_option()
 while option_lst and option_lst[0] != 'Q':
-    # YOUR CODE HERE
+    if option_lst[0] == 'P':
+        display(stock, tableau, foundation)
+    elif option_lst[0] == 'M':
+        col = option_lst[1]
+        row = option_lst[2]
+        dst =option_lst[3]
+        if move(tableau, col, row, dst):
+            display(stock, tableau, foundation)
+        else:
+            print('Read the rules fucktard')
+    elif option_lst[0]
+
     #            else: # move failed
     #                print("Error in move:",option,",",option_lst[1],",",option_lst[2],",",option_lst[3])
     option_lst = get_option()
