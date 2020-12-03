@@ -38,21 +38,31 @@ validate_move (tableau,src_col,src_row,dst_col):
 
 move() (tableau,src_col,src_row,dst_col):
 
-    a = [1,2,3,4]
-    b = [5,6,7,8]
-
-    for i in range(len(a)):
-        b.append(a.pop(0))
-
-    for i in range(len(b) - 4):
-        a.append(b.pop(4))
-
-
     if validate_move():
         for i in range(len(src_col) - src_row):
             dst_col.append(tableau[src_col].pop(src_row))
-        return True
+        moved = True
 
     else:
-        return False
+        moved = False
 
+    if moved:
+        check(tableau)
+
+check_sequence(col):
+    complete = True
+    suits = set([card.suit() for card in col])
+    ranks = [card.rank() for card in col]
+
+    if len(suits) > 1 or any(ranks[i] != ranks[i-1] for i in range(1, len(ranks))
+        complete = False
+
+    return complete
+
+def deal from stock
+    if len stock == 0:
+        return
+    else:
+        for i in range(3)
+            tableau[i].append(stock.pop(0))
+        return
