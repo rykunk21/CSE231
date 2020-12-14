@@ -1,0 +1,313 @@
+
+class Move
+    def init
+        name: the name of the move (string)
+        element: the move’s type (string)
+        power: the base damage that the move inflicts (int)
+        accuracy: how likely the move is to hit an opponent (int)
+        attack_Type: classification if this is a physical attack,
+            special attack or status move (int)
+
+    __eq__(self) -------- boolean
+    True if attributes are equal; False otherwise. Provided by instructors
+
+    __str__ (self) ------ str
+    Returns just the name of the move (used for printing).
+    # for printing. Takes 1 arg: self. Returns a string.
+
+    __repr__ (self) ----str
+    Returns just the name of the move (can utilize the __str__() method here).
+    # for displaying in the shell. Takes 1 arg: self. Returns a string.
+
+    get_name (self) --- str
+    Returns the name attribute.
+
+    get_element (self) --str
+    Returns the element attribute.
+
+    get_power (self) --- int
+    Returns the power attribute.
+
+    get_accuracy (self) -- int
+    Returns the accuracy attribute.
+
+    get_attack_type (self) -- int
+    Returns the attack_type attribute.
+
+
+class Pokemon:
+    def init
+        name: the name of the pokemon (string)
+        element1: the first element of the pokemon (string)
+        element2: the second element of the pokemon (string) (None if the pokemon has one
+            element)
+        hp: the health points of the pokemon, when this reaches 0 the pokemon
+            faints (int)
+        patt: the physical strength of the pokemon (int)
+        pdef: the physical defense of the pokemon (int)
+        satt: the special strength of the pokemon (int)
+        sdef: the special defense of the pokemon (int)
+        moves: the list of moves that this pokemon has access to (list of Moves)
+
+    __str__ (self) --- str
+    Returns a string containing the parts of the pokemon object divided into three lines. The
+    first line will display in this order: name, hp, patt, pdef, satt and sdef, followed by a
+    newline character directly after sdef with no space inbetween sdef and the newline
+    character. The second line will display the element1 and element2 with a newline
+    character after element2. The third line will display all the moves of that pokemon.
+    Each attribute will take up exactly 15 spaces and be left adjusted no matter the type.
+
+    __eq__(self) ---Boolean
+    True if attributes are equal; False otherwise. Provided by instructors
+
+    __repr__ (self) -- str
+    Returns the same value as the __str__() method to.
+    # for displaying in the shell. Takes 1 arg: self. Returns a string.
+
+    get_name (self) -- str
+    Returns the name attribute.
+
+    get_element1 (self) -- str
+    Returns the element1 attribute.
+
+    get_element2 (self) -- str or None
+    Returns the element2 attribute.
+
+    get_hp (self) --- int
+    Returns the hp attribute.
+
+    get_patt (self) --- int
+    Returns the patt attribute.
+
+    get_pdef (self) -- int
+    Returns the pdef attribute.
+
+    get_satt (self) -- int
+    Returns the satt attribute.
+
+    get_sdef (self) -- int
+    Returns the sdef attribute.
+
+    get_moves (self) -- list
+    Returns the moves attribute.
+
+    get_number_moves (self) -- int
+    Returns the number of moves.
+
+    choose (self, index) -- Move class object or None
+    Takes an index and returns the corresponding move from the moves list. If
+    there is an IndexError returns None.
+
+    show_move_elements(self)
+    Displays the elements of the pokemon’s moves (each in a 15-space field,
+    left justified) This function does not return anything.
+
+    show_move_power(self)
+    Displays the power of the pokemon’s moves
+    (each in a 15-space field, left justified). This
+    function does not return anything.
+
+    show_move_accuracy(self)
+    Displays the accuracy of the pokemon’s moves (each in a 15-space field,
+    left justified). This function does not return anything.
+
+    add_move (self, move)
+    Adds the move parameter to the list of moves for this pokemon if
+    this pokemon has three or less moves. This function does not return anything.
+
+
+
+    ****
+    attack (self, move, opponent)
+    This method takes the move used by the attacker (self) and deals damage to the
+    opponent (who should also be an instance of class Pokemon). It does not return
+    anything.
+
+    The equation for calculating damage will be a slight variation of the
+    actual calculator because Pokemon levels are not taken into account.
+    It is as follows:
+
+        Damage = [([mp * (a/d) *20]/50) + 2] * modifier
+
+        mp: the power of the move
+        A: The patt or satt of the attacking Pokemon
+        D: The pdef or sdef of the defending Pokemon
+        modifier: takes into effect same-type attack bonus (STAB) if move is super effective or
+        not effective.
+
+    subtract_hp (self, damage)
+    This method takes the damage variable and subtracts it from the hp of the
+    Pokemon object. The hp of the Pokemon object becomes the maximum of the
+    (hp – damage) or 0. (Adventuresome students may want to try Python’s
+    ternary operator). This function does not return anything.
+
+
+
+    # extract power of move
+    mp = move.get_power()
+    modifier = 1.0
+    attack_type = move.get_atttack_type()
+
+    check if class
+    if attack_type == 2:
+        attk = self.get_patt()
+        dfn = other.get_pdef()
+    elif attack_type ==3:
+        attk = self.get_satt()
+        dfn = other.get_sdfnc()
+    else:
+        make error
+
+    elem1 = self.get_elem1
+    elem2 = self.get_elem2
+    dfnc1 = opp.get_elem1
+    dfnc2 = opp.get_elem2
+
+    for elem in dfnc list:
+        if any(elem in effective[usr] for usr in usr list):
+            modifier *= 2
+
+        if any(elem in not effective[usr] for usr in usr list):
+            modifier *= .5
+
+        if any(elem in no damage[usr] for usr in usr list):
+            modifier = 0
+
+
+    if
+
+
+
+
+    ########################################################################
+    is_effective_dictionary = {'bug': {'dark', 'grass', 'psychic'},
+                           'dark': {'ghost', 'psychic'},
+                           'dragon': {'dragon'},
+                           'electric': {'water', 'flying'},
+                           'fairy': {'dark', 'dragon', 'fighting'},
+                           'fighting': {'dark', 'ice', 'normal', 'rock',
+                                        'steel'},
+                           'fire': {'bug', 'grass', 'ice', 'steel'},
+                           'flying': {'bug', 'fighting', 'grass'},
+                           'ghost': {'ghost', 'psychic'},
+                           'grass': {'water', 'ground', 'rock'},
+                           'ground': {'electric', 'fire', 'poison', 'rock',
+                                      'steel'},
+                           'ice': {'dragon', 'flying', 'grass', 'ground'},
+                           'normal': set(),
+                           'poison': {'fairy', 'grass'},
+                           'psychic': {'fighting', 'poison'},
+                           'rock': {'bug', 'fire', 'flying', 'ice'},
+                           'steel': {'fairy', 'ice', 'rock'},
+                           'water': {'fire', 'ground', 'rock'}
+                           }
+
+    not_effective_dictionary = {
+        'bug': {'fairy', 'flying', 'fighting', 'fire', 'ghost', 'poison', 'steel'},
+        'dragon': {'steel'},
+        'dark': {'dark', 'fairy', 'fighting'},
+        'electric': {'dragon', 'electric', 'grass'},
+        'fairy': {'fire', 'poison', 'steel'},
+        'fighting': {'bug', 'fairy', 'flying', 'poison', 'psychic'},
+        'fire': {'dragon', 'fire', 'rock', 'water'},
+        'flying': {'electric', 'rock', 'steel'},
+        'ghost': {'dark'},
+        'grass': {'bug', 'dragon', 'grass', 'fire', 'flying', 'poison', 'steel'},
+        'ground': {'bug', 'grass'},
+        'ice': {'fire', 'ice', 'steel', 'water'},
+        'normal': {'rock', 'steel'},
+        'poison': {'ghost', 'ground', 'poison', 'rock'},
+        'psychic': {'psychic', 'steel'},
+        'rock': {'fighting', 'ground', 'steel'},
+        'steel': {'electric', 'fire', 'steel', 'water'},
+        'water': {'dragon', 'grass', 'ice'}
+        }
+
+    no_effect_dictionary = {'electric': {'ground'},
+                            'dragon': {'fairy'},
+                            'fighting': {'ghost'},
+                            'ghost': {'normal', 'psychic'},
+                            'ground': {'flying'},
+                            'normal': {'ghost'},
+                            'poison': {'steel'},
+                            'psychic': {'dark'},
+
+                            'bug': set(), 'dark': set(), 'fairy': set(),
+                            'fire': set(),
+                            'flying': set(), 'grass': set(), 'ice': set(),
+                            'rock': set(), 'steel': set(), 'water': set()
+                            }
+
+    ########################################################################
+    ****
+
+Proj11.py
+    def read_file_moves(fp) --> list(*move objects)
+
+
+    def read_file_pokemon(fp) --> list(*pokemon objects)
+
+
+    def choose_pokemone(choice, pokemon_list) --> pokemon object or None
+
+
+    def add_moves(pokemon, moves_list) --> Boolean
+
+
+    def turn (player_num, player_pokemon, opponent_pokemon) --- Boolean
+
+
+    main()
+
+
+
+
+
+# notes
+For those of you knowledgeable about Pokemon you will notice a few things missing.
+
+• The speed stat is not utilized.
+• Moves that take more than one turn to perform, have multiple hits and have cooldowns
+    are simplified to single hit, single turn moves.
+• Status effect moves, moves that lower stats, moves that change terrain and
+    recovery/protection moves are also not utilized.
+• Finally, there are no critical hits or levels to take into consideration.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

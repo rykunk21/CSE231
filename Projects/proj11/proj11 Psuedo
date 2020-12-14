@@ -1,0 +1,219 @@
+import csv
+
+def read_file_moves(fp) ---list[Move objects]
+    (0, 'id')
+    (1, 'identifier')
+    (2, 'generation_id')
+    (3, 'type_id')
+    (4, 'power')
+    (5, 'pp')
+    (6, 'accuracy')
+    (7, 'priority')
+    (8, 'target_id')
+    (9, 'damage_class_id')
+    (10, 'effect_id')
+    (11, 'effect_chance')
+    (12, 'contest_type_id')
+    (13, 'contest_effect_id')
+    (14, 'super_contest_effect_id')
+
+
+    class Move(name, element, power, accuracy, attack_type):
+
+    next(csv.reader(fp), None)
+
+    moves = []
+    lines = [line for line in csv.reader(fp)]
+    for line in lines:
+        try:
+            attr = [line [2]
+                line[1]
+                element_id_list[line[3]]
+                int(line[4])
+                int(line[6])
+                line[9]
+                    ]
+            gen_id, name, element, power, accuracy, attack_type = *attr
+
+
+            # expanding
+            if gen_id != 1 or attack_type == 1
+        except ValueError:
+            continue
+
+        moves.append(Move(name, element, power, accuracy, attack_type))
+
+    return moves
+
+
+def read_file_pokemon(fp) -- list[Pokemon objects]
+    (0, '#')
+    (1, 'Name')
+    (2, 'Type 1')
+    (3, 'Type 2')
+    (4, 'Total')
+    (5, 'HP')
+    (6, 'Attack')
+    (7, 'Defense')
+    (8, 'Sp. Atk')
+    (9, 'Sp. Def')
+    (10, 'Speed')
+    (11, 'Generation')
+    (12, 'Legendary')
+
+    class Pokemon(name, element1, element2, moves,hp, patt, pdef, satt, sdef)
+
+    queue = []
+    pokemon = []
+    next(csv.reader(fp), None)
+    lines = [line for line in csv.reader(fp)]
+    for line in lines:
+        line[0] = id
+        if id not in queue
+            queue.append(id)
+        else:
+            continue
+        try:
+            pull = [
+                line[1].lower()
+                line[2].lower()
+                line[3].lower()
+                None
+                line[5]
+                line[6]
+                line[7]
+                line[8]
+                line[9]
+            ]
+
+            name, element1, element2, moves,hp, patt, pdef, satt, sdef = pull
+
+            pokemon.append(name, element1, element2, moves,hp, patt, pdef, satt, sdef)
+
+        except ValueError:
+            continue
+
+
+def choose_pokemon (choice, pokemon_list)-- Pokemon object or None
+    if isinstance(choice, int):
+        if choice-1 in range(len(pokemon_list)) or choice == len(pokemon_list)
+            choice -= 1
+            return copy.deepcopy(pokemon_list)[choice]
+        else:
+            continue
+    elif isinstance(choice, str):
+        choice = choice.lower()
+        if not any(choice == pokemon.name for pokemon in pokemon_list):
+            continue
+        for i, pokemon in enumerate(pokemon_list):
+            if pokemon.name == choice
+                return deepcopy(pokemon_list)[i]
+    else:
+        return None
+
+add_moves (pokemon, moves_list) --- Boolean:
+    for i in range(200):
+        move = deepcopy(moves_list)[randint(0, len(moves_list)]
+        :
+
+        if move not in moves and len(move) > 0:
+            if move.get_element() in [pokemon.get_element1, pokemon.get_element2]
+                pokemon.addmove(move)
+        else:
+            pokemon.addmove(move)
+
+        if pokemon.get_number_moves == 4:
+            break
+
+    return False if pokemon.get_number_moves != 4 else True
+
+
+def turn (player_num, player_pokemon, opponent_pokemon) --- Boolean
+
+##################################################################
+Player_num is an int for printing which player: 1 or 2 Player_pokemon, the attacker,
+and opponent_pokemon are of type Pokemon Player Turn steps
+a. Print "Player {}’s turn" and print the player’s pokemon.
+b. Prompt for index into attacker’s list of moves or show request or quit.
+        If the player requests show (‘show ele’, ‘show pow’, ‘show acc’)
+        the appropriate value will be displayed followed by a re-prompt. If ‘q’, print "Player {} quits,
+        Player {} has won the pokemon battle!" and end battle.  return False.
+c. Print the selected move.
+d. Print the opponent’s health.
+e. Attack (call the player’s attack method).
+f. Print the opponent’s health again.
+g. If opponent’s health is less than or equal to zero, the player wins. print
+        "Player {}'s pokemon fainted, Player {} has won the pokemon battle!" . return False.
+h. return True
+##################################################################
+
+    print( players {} turn format playernum)
+    turn, valid = check(input()select attack)
+    if turn in valid:
+        if (‘show ele’, ‘show pow’, ‘show acc’)
+        elif attack:
+            print move
+            print opponent health
+            attack
+            print opponent health
+
+        elif quit
+
+    if opponent.hp <= 0:
+        "Player {}'s pokemon fainted, Player {} has won the pokemon battle!
+        return false
+
+    return true
+
+
+def main()
+
+    battle = input().lower()
+    while true
+        moves, pokemon = readfile
+        if battle in [y,n,q]
+           if battle = y:
+              1, pokemon1 = 1, pokemon(prompt)
+              2, pokemon2 = 2, pokemon(prompt)
+              start = turn(1, pokemon1, pokemon2)
+              while turn(1, pokemon1, pokemon2):
+                  if not turn(2, pokemon2, pokemon1)
+                        break
+            battle = input().lower()
+        else:
+            invalid input
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

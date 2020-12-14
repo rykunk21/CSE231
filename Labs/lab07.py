@@ -66,7 +66,7 @@ def clean_string(s):
 
 
 def main():
-    fp = open("../immigration.csv")
+    fp = open("../Extras/immigration.csv")
     L = read_file(fp)
     us_pop, total_pop = get_totals(L)
     a = 1

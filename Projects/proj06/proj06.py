@@ -28,7 +28,7 @@ def open_file():
     while True:
         filename = input('Please input a file to use: ')
         if filename == '':  # Test for no file name input
-            filename = '../reactors-operating.csv'
+            filename = '../../Extras/reactors-operating.csv'
         try:
             fp = open(filename, 'r',
                       encoding="windows-1252")

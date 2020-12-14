@@ -5,7 +5,7 @@
 local = True
 
 if local:
-    from Labs.Lab_11_folder import date
+    from Labs.lab11 import date
 else:
     import date
 
